@@ -1,6 +1,10 @@
 
 
 #include <Wire.h>
+sfioaefjosfsjf
+dioadjapd
+asddapsodasodjadp
+asdpoasjdpoasd
 #include <Zumo32U4.h> // inkluderer nødvendige biblitek
 
 const uint16_t maxSpeed = 200; //maksfarten til motorene. Kan synkes vist bilen skal gå saktere
