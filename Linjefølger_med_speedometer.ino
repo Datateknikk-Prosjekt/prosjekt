@@ -1,5 +1,3 @@
-
-
 #include <Wire.h>
 #include <Zumo32U4.h> // inkluderer nødvendige biblitek
 
@@ -17,7 +15,7 @@ unsigned int lineSensorValues[NUM_SENSORS]; // definerer antallet linje sensorer
 int16_t lastError = 0;
 float dt=0;
 float speedV = 0;
-float Kp = 25;
+float Kp = 0.5 ; //5 funker for 90 grader
 
 
 
@@ -75,14 +73,14 @@ void speedometer(){
 void followline(){
   int16_t position = lineSensors.readLine(lineSensorValues); //posisjon blir definert som avlest verdi fra linjensorene
   int16_t error = position - 2000; //posisjon går fra 0-4000, error blir definert som posisjon minus 2000
-  int16_t speedDifference = (error * Kp) + (2 * (error-lasterror));//finner ønsket fartsforskjell på hjulene for å holde posisjon
+  int16_t speedDifference = (error * Kp) + (2 * (error-lastError));//finner ønsket fartsforskjell på hjulene for å holde posisjon
   int16_t leftSpeed = (int16_t)maxSpeed + speedDifference;
   int16_t rightSpeed = (int16_t)maxSpeed - speedDifference;
   
   leftSpeed = constrain(leftSpeed, 0, (int16_t)maxSpeed); //begrenser hjulfarten til å holde seg under definert maksfart
   rightSpeed = constrain(rightSpeed, 0, (int16_t)maxSpeed);
   
-  lasterror = error
+  lastError = error;
   
   motors.setSpeeds(leftSpeed, rightSpeed); //setter kalkulert hastighet på hvert belte
   
