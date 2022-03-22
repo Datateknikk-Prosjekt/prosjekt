@@ -16,7 +16,7 @@ int16_t lastError = 0;
 float dt=0;
 float speedV = 0;
 float Kp = 0.5 ; //5 funker for 90 grader
-
+float Td = 2;
 
 
 void calibrateSensors() //funksjonen som kaliblerer linjesensoren
@@ -73,7 +73,7 @@ void speedometer(){
 void followline(){
   int16_t position = lineSensors.readLine(lineSensorValues); //posisjon blir definert som avlest verdi fra linjensorene
   int16_t error = position - 2000; //posisjon går fra 0-4000, error blir definert som posisjon minus 2000
-  int16_t speedDifference = (error * Kp) + (2 * (error-lastError));//finner ønsket fartsforskjell på hjulene for å holde posisjon
+  int16_t speedDifference = (error * Kp) + (Td * (error-lastError));//finner ønsket fartsforskjell på hjulene for å holde posisjon
   int16_t leftSpeed = (int16_t)maxSpeed + speedDifference;
   int16_t rightSpeed = (int16_t)maxSpeed - speedDifference;
   
