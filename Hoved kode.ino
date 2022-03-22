@@ -58,13 +58,74 @@ void Charge(){ //lade funksjon
     kapasitet = 1200 * kvalitetsverdien 
   }
 }
-void setup() {
-  // put your setup code here, to run once:
 
+void calibrateSensors() //funksjonen som kaliblerer linjesensoren
+{
+  delay(500); //liten delay slik at bilen ikke beveger seg presis ved påtrykk
+  for(uint16_t i = 0; i < 120; i++) // Bilen leser av 120 grader i hver retning
+  {
+    if (i > 30 && i <= 90)
+    {
+      motors.setSpeeds(-200, 200); // Venstre og høyre motor får en fart på 200 og
+    }                              // minus 200 rotasjoner hver
+    else
+    {
+      motors.setSpeeds(200, -200); //bilen går tilbake til startposisjon
+    }
+
+    lineSensors.calibrate(); //linjesensoren blir kalibrert
+  }
+  motors.setSpeeds(0, 0); //motorfarten blir satt til 0
+}
+
+void setup() {
+  lineSensors.initFiveSensors(); //linjesensorene
+  display.print("Press A for Kalibrering"); //Blir vist på displayet på bilen
+  buttonA.waitForButton(); 
+  display.clear();
+  calibrateSensors(); //kaller på kalibreringsfunksjonen når knapp A blir trykt in for første gang
+  display.print("Press A for kjøring");
+  buttonA.waitForButton(); // Går inn i void loop når knapp 
+  display.clear();
+
+}
+void speedometer(){
+    static uint8_t lastDisplayTime;
+  if ((uint8_t)(millis() - lastDisplayTime) >= 100)
+  {
+    int16_t countsLeft = encoders.getCountsAndResetLeft();
+    int16_t countsRight = encoders.getCountsAndResetRight();
+    float gCounts = (countsLeft + countsRight);
+    dt=((gCounts)/2)/75.81;
+    speedV = dt/(0.1);
+    lastDisplayTime = millis();
+  display.clear();
+  display.print(round(speedV)); 
+  display.print("Cm/s");
+  
+  
+  }   
+}
+void followline(){
+  int16_t position = lineSensors.readLine(lineSensorValues); //posisjon blir definert som avlest verdi fra linjensorene
+  int16_t error = position - 2000; //posisjon går fra 0-4000, error blir definert som posisjon minus 2000
+  int16_t speedDifference = (error * Kp) + (Td * (error-lastError));//finner ønsket fartsforskjell på hjulene for å holde posisjon
+  int16_t leftSpeed = (int16_t)maxSpeed + speedDifference;
+  int16_t rightSpeed = (int16_t)maxSpeed - speedDifference;
+  
+  leftSpeed = constrain(leftSpeed, 0, (int16_t)maxSpeed); //begrenser hjulfarten til å holde seg under definert maksfart
+  rightSpeed = constrain(rightSpeed, 0, (int16_t)maxSpeed);
+  
+  lastError = error;
+  
+  motors.setSpeeds(leftSpeed, rightSpeed); //setter kalkulert hastighet på hvert belte
+  
 }
 
 void loop() {
   currentmillis = millis();
+  followline();
+  speedometer();
 
   
   // put your main code here, to run repeatedly:
