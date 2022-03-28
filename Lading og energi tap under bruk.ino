@@ -1,4 +1,5 @@
 #include <Zumo32U4.h>
+#include <EEPROM.h>
 
 Zumo32U4ButtonA buttonA; //definerer buttons
 Zumo32U4ButtonB buttonB;
@@ -6,7 +7,7 @@ Zumo32U4ButtonC buttonC;
 Zumo32U4ButtonD buttonD;
 
 float kapasitet = 1200; //kapasitetens verdi
-float kvalitetsverdien = 1; //verdi på standen av batteriet
+int kvalitet_read = EEPROM.read(0);
 int Poweruse = 0; //variabel for hvor mye som energi bilen bruker
 int Hastig_V = 0; //hjelpevariabel for hastigheten
 int HastighetRead = 0; //variabel for hva hastigeheten er
@@ -29,32 +30,33 @@ void Powerdrain(){
     Hastighet = 0; //reseter hastighets variabelen
     Hastig_V = 0; //reseter variabel
   }
-  
-  return;
 }
 
 void Charge(){ //lade funksjon
   
-  if (buttonA.isPressed()) { //skjekker om button A er presset 
+  else if (buttonA.isPressed()) { //skjekker om button A er presset 
     delay(15000);
-    kvalitetsverdien = kvalitetsverdien - 0.015 //Oppdaterer kvaliteten på batteriet
-    kapasitet = kapasitet + 400 //setter opp hvor mye strøm som er i batteritet 
-    if (kapasitet > (1200*kvalitetsverdien)) { //passer på at det ikke blir mer strøm enn det som er mulig 
-      kapasitet = 1200*kvalitetsverdien;
+    kvalitet_read = kvalitet_read - 2; //Oppdaterer kvaliteten på batteriet
+    EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
+    kapasitet = kapasitet + 400; //setter opp hvor mye strøm som er i batteritet 
+    if (kapasitet > (1200*kvalitet_read)) { //passer på at det ikke blir mer strøm enn det som er mulig 
+      kapasitet = 1200*kvalitet_read;
     }
   }
-  if (buttonB.isPressed()) {
+  else if (buttonB.isPressed()) {
     delay(20000);
-    kvalitetsverdien = kvalitetsverdien - 0.025
-    kapasitet = kapasitet + 800
-    if (kapasitet > (1200*kvalitetsverdien)) {
-      kapasitet = 1200*kvalitetsverdien;
+    kvalitetsverdien = kvalitet_read - 3;
+    EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
+    kapasitet = kapasitet + 800;
+    if (kapasitet > (1200*kvalitet_read)) {
+      kapasitet = 1200*kvalitet_read;
     }
   }
-  if (buttonC.isPressed()) {
+  else if (buttonC.isPressed()) {
     delay(25000);
-    kvalitetsverdien = kvalitetsverdien - 0.04
-    kapasitet = 1200 * kvalitetsverdien 
+    kvalitetsverdien = kvalitet_read - 5;
+    EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
+    kapasitet = 1200 * kvalitet_read;
   }
 }
 void setup() {
