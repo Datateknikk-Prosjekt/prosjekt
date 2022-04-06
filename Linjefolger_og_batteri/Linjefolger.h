@@ -41,24 +41,24 @@ Zumo32U4LCD lcd;
 
 
 //Funksjoner linjefølger:
-void noLine(){
-    beforeMillis = millis();
-    while (millis()-beforeMillis <= 10000) { //har forandret seg mer en 500 på 25ms.
+void noLine(){  //funksjonen som blir kalt på når sensoren mister linja
+    beforeMillis = millis(); //Variabelen får en ny tidsverdi
+    while (millis()-beforeMillis <= 10000) { 
       int16_t nolinevalue = lineSensors.readLine(lineSensorValues); //når linjesensoren mister linja får denne en verdi på 4000.
-      if (nolinevalue != 4000)break; //vist linjesensoren får en ny verdi bryter den while løkka.
-      else if (millis()-beforeMillis > 1500 && millis()-beforeMillis < 2250) {
-        for (int i = 0; i<230; i++){
+      if (nolinevalue != 4000)break; //vist linjesensoren får en ny verdi (finner linja) bryter den while løkka.
+      else if (millis()-beforeMillis > 1500 && millis()-beforeMillis < 2250) { //etter 1500ms uten linje snur bilen
+        for (int i = 0; i<230; i++){ //for løkke som snur bilen
         motors.setSpeeds(i, -i);
         count = 1;
      }
       } 
-      else if (millis()-beforeMillis > 5000){ //
-      motors.setSpeeds(200,100);
+      else if (millis()-beforeMillis > 5000){ //etter 5 sekunder tar bilen en høyresving hvis den ikke finner linja for
+      motors.setSpeeds(200,100);              // erfaringsmessi er det ikke alltid bilen leser av en verdi på denne sida
      }
      else {
-      motors.setSpeeds(100, 100);
-      int16_t nolineReturn = lineSensors.readLine(lineSensorValues); 
-      if (nolineReturn != 4000)break;
+      motors.setSpeeds(100, 100); //etter bilen har snudd 180 grader kjører den tilbake og finner linja den forlot
+      int16_t nolineReturn = lineSensors.readLine(lineSensorValues);  
+      if (nolineReturn != 4000)break; //når den finner tilbake til linja får variabelen en ny verdi og løkka blir brutt
      }
   }
   }
@@ -66,27 +66,27 @@ void noLine(){
 
 
 
-bool aboveLine(uint8_t sensorIndex)
+bool aboveLine(uint8_t sensorIndex) //funksjon som blir returnert "True" når linjesensoren ser en linje.
 {
   return lineSensorValues[sensorIndex] > sensorThreshold;
 }
 
 
 
-uint16_t readSensors()
+uint16_t readSensors() //tar verdiene avlest fra linjesensorene og returnerer en estimert plassering
 {
   return lineSensors.readLine(lineSensorValues);
 }
 
 
 
-bool aboveLineDark(uint8_t sensorIndex) //funksjon som blir returnert true vist sensoren ser mye mørkt.
+bool aboveLineDark(uint8_t sensorIndex) //funksjon som blir returnert "True" hvis sensoren ser mer mørkt en "SensorThresholdDark"
 {
   return lineSensorValues[sensorIndex] > sensorThresholdDark;
 }
 
 
-bool aboveDarkSpot()
+bool aboveDarkSpot() //Blir returnert "True" hvis hver sensor ser linja
 {
   return aboveLineDark(0) && aboveLineDark(1) && aboveLineDark(2) && aboveLineDark(3) && aboveLineDark(4);
 }
@@ -106,24 +106,24 @@ void followline(){
     previousmillis += refreshintervall;
     lastposition = position;
   }
-  if(abs(position - lastposition) > 500)
+  if(abs(position - lastposition) > 500) //hvis posisjonsendingen overstiger en verdi på 500 på 500ms blir denne funksjonen aktivert
   {
     noLine();
   }
-   else if(aboveDarkSpot())
+   else if(aboveDarkSpot()) //Blir aktivert når "aboveDarkSpot" blir returnert "True"
     {
-      motors.setSpeeds(0, 0);
+      motors.setSpeeds(0, 0); //foreløpig setter den bare motorfarten til 0, men sette inn en variabel her som styrer en switch case??
       buttonA.waitForButton();
       }
     
     
   if(aboveLine(0) && aboveLine(1) && !aboveLine(4))
     {
-    motors.setSpeeds(200,200);
-    delay(5);
+    motors.setSpeeds(200,200); //Bilen kjører rett frem i et T-kryss
+    delay(5); // delay må påføres for at bilen skal kjøre rett i krysse hver gang
     }
     
-  if(!aboveLine(0) && aboveLine(3) && aboveLine(4))
+  if(!aboveLine(0) && aboveLine(3) && aboveLine(4)) //funksjon som blir aktivert når bilen ser en høyre-sving
     {
     unsigned long NoLineMillis = millis();
     while(count == 1){
