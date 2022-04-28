@@ -5,6 +5,13 @@
 
 
 
+String SHouse;
+int IHouse;
+
+int stopHouse1;
+int stopHouse2;
+int stopHouse3;
+
 //Globale variabler gyroskop:
 int gyro_r; //definerer en variabel
 
@@ -19,6 +26,32 @@ void Battery_reset() { //void funksjon som leser av akselerometeret
     
     buttonA.waitForButton();
   }
+}
+
+
+
+
+void gethouse() {
+  poi = 0;
+  if (Serial1.available() > 0) {
+    SHouse = Serial1.readString();
+    Serial1.setTimeout(30);
+    IHouse = SHouse.toInt(); // får et nummer mellom 0 og 15
+    if (IHouse > 3) {
+      stopHouse3 = 3;
+      IHouse = IHouse - 4;
+      zumodrift = 3;
+    }
+    if (IHouse > 1) {
+      stopHouse2 = 2;
+      zumodrift = 2;
+    }
+   /* if (IHouse % 2 != 0 ) {
+      stopHouse1 = 1;
+      IHouse = IHouse - 1;
+      zumodrift = 1;
+  } */
+}
 }
 
 

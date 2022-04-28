@@ -7,24 +7,27 @@
 
 //Globale variabler batteri:
 float kapasitet = 1200; //kapasitetens verdi
-int kvalitet_read = EEPROM.read(0);
-int Poweruse = 0; //variabel for hvor mye som energi bilen bruker
-int Hastig_V = 0; //hjelpevariabel for hastigheten
-int HastighetRead = 0; //variabel for hva hastigeheten er
-int Hastighet = 0;
+float kvalitet_read = EEPROM.read(0);
+float Poweruse = 0; //variabel for hvor mye som energi bilen bruker
+float Hastig_V = 0; //hjelpevariabel for hastigheten
+//int speedV = 0; //variabel for hva hastigeheten er
+float Hastighet = 0;
 int currentmillis = 0;
 int secundmillis = 0;
-
-
+int buzz_light = 1;
+float maxH = 0;
+float gjennomsnittsfart;
+int gjennomsnitthelp;
 
 
 //Funksjoner batteri:
 void Powerdrain(){
-  if (HastighetRead < 0) { //passer på at det blir gitt en positiv verdi
-    HastighetRead = 0 - HastighetRead;
+  currentmillis = millis();
+  if (speedV < 0) { //passer på at det blir gitt en positiv verdi
+    speedV = 0 - speedV;
   }
   Hastig_V++; //holder telling på hvor mange ganger en fart har blitt lagt til
-  Hastighet = Hastighet + HastighetRead + 1; //legger til hastigheten 
+  Hastighet = Hastighet + speedV + 1; //legger til hastigheten 
   if (currentmillis - secundmillis > 1000) { //skjekker om det har gått 1 sekund
     Hastighet = Hastighet/Hastig_V; //regner ut gjennomsnitts hastigheten på det sekundet 
     Poweruse = 10 + 2 * Hastighet; //omregner det til energibruk
@@ -63,6 +66,61 @@ void Charge(){ //lade funksjon
   }
 }
 
+
+
+void low_power() { //under 10 varsela
+  buzzer.playFrequency(440, 200, 15); //frekvens 440, tid 200 millis, volume 15
+
+}
+
+
+void very_low_power() {
+
+  switch (buzz_light) {
+    case 1: {
+      buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
+      ledRed(1);
+      ledYellow(0);
+      ledGreen(0);
+
+      buzz_light = 2;
+      break;
+      }
+    case 2: {
+      buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
+      ledRed(0);
+      ledYellow(1);
+      ledGreen(0);
+
+      buzz_light = 3;
+      break;
+      }
+    case 3: {
+      buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
+      ledRed(0);
+      ledYellow(0);
+      ledGreen(1);
+
+      buzz_light = 1;
+      break;
+    }
+  }
+}
+
+
+void Funkgjennomsnittsfart () {
+  gjennomsnittsfart = gjennomsnittsfart + speedV;
+  gjennomsnitthelp++;
+  if (speedV > maxH) {
+    maxH = speedV;
+  }
+  if (currentmillis - secundmillis > 60000) {
+    gjennomsnittsfart = gjennomsnittsfart/gjennomsnitthelp; //print maxh oh gjennomsnittsfarten her til espen
+    gjennomsnitthelp = 0;
+    maxH = 0;
+    gjennomsnittsfart = 0;
+  }
+}
 
 
 
