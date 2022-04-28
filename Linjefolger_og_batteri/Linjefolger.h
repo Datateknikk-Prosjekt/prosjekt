@@ -8,6 +8,9 @@
 
 int zumodrift;
 
+int refreshintervall2 = 1000;
+unsigned long previousmillis2;
+
 //Globale variabler linjefølger:
 const uint16_t maxSpeed = 220; //maksfarten til motorene. Kan synkes vist bilen skal gå saktere
 #define NUM_SENSORS 5 
@@ -26,6 +29,21 @@ int poi = 0;
 int noLineCase = 1;
 long darkspotmillis = 0;
 
+
+
+//Posisjonsvariabler for å assistere linjefølgeren;
+int a;
+int b;
+int c;
+int d;
+int e;
+int f;
+int g;
+int h;
+int j;
+int k;
+int l;
+int m;
 
 
 //Aktiverte sumofunksjoner:
@@ -108,7 +126,8 @@ void followline(){
   static unsigned long previousmillis = 0;
   if (millis() - previousmillis >= refreshintervall){ //if seting som blir kjørt vert 500. ms som fornyer lastposition.
     previousmillis += refreshintervall;
-    lastposition = LFposition;  
+    lastposition = LFposition;
+    
   }
   if(abs(LFposition - lastposition) > 250)
   {
@@ -120,7 +139,7 @@ void followline(){
      
     if (millis()- darkspotmillis > 2000) {
       poi++;
-      Serial1.print(poi);
+      //Serial1.print(poi);
       for (int i = 0; i <= 25; i ++){
          motors.setSpeeds(200,200);
         }
@@ -171,7 +190,7 @@ void followline(){
 
 
 void speedometer(){
-    static uint8_t lastDisplayTime;
+  static uint8_t lastDisplayTime;
   if ((uint8_t)(millis() - lastDisplayTime) >= 100)
   {
     int16_t countsLeft = encoders.getCountsAndResetLeft();
@@ -180,7 +199,7 @@ void speedometer(){
     dt=((gCounts)/2)/75.81;
     speedV = dt/(0.1);
     lastDisplayTime = millis();
-    Serial1.print(poi);
+
   }
 }
 
@@ -204,6 +223,8 @@ void speedometer(){
   }
   motors.setSpeeds(0, 0);
 }
+
+
 
 
 #endif

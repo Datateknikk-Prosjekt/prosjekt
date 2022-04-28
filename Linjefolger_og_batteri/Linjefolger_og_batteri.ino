@@ -36,67 +36,141 @@ void setup()
 
 
 void loop(){
+ 
   speedometer();
- // if (millis() - etmillis > 500) {
-   // Serial1.println(zumodrift);
-    //etmillis = millis();
-  //}
+  if (Serial1.available()){
+    SHouse = Serial1.readString();
+    Serial1.setTimeout(30);
+    zumodrift = SHouse.toInt(); // får et nummer mellom 0 og 15
+  }
+  
+
   switch(zumodrift) {
     case 0: {
-      gethouse();
+      motors.setSpeeds(0,0);
       break;
       }
-    case 1: {
-    followline();
-    if (poi == 1){
+    case 1: { //case 1 stopper på hus 1
+    followline(); 
+    if (poi == 4 && a == 0){
       motors.setSpeeds(0,0);
+      a++;
       delay(1500);
     }
-      if (stopHouse2 == 2){
-        zumodrift = 2;
-    }
-      else if (stopHouse3 == 3){
-        zumodrift = 3;
-      }
-      else {
-        zumodrift == 4;
-      }
+    
+     if (poi == 7) {
+      motors.setSpeeds(0,0);
+      zumodrift = 0;
+     }
     break;
     }
-    case 2: {
+    case 2: { //stopper på hus 2
       followline();
-      if (poi == 2){
+      if (poi == 5 && b == 0) {
         motors.setSpeeds(0,0);
+        b++;
         delay(1500);
-        if (stopHouse3 == 3){
-          zumodrift = 3;
-        }
-        else {
-          zumodrift = 0;
-        }
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
       }
       break;
     }
-    case 3: {
-      followline();
-      if (poi == 3){
+    case 4: { //stopper på hus 3
+     followline();
+      if (poi == 6 && c == 0) {
         motors.setSpeeds(0,0);
+        c++;
         delay(1500);
-        zumodrift = 4;
-        }
+      }
+      if (poi == 7) { 
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
       break;
       }
-      case 4: {
-        followline();
-        if (poi == 4) {
-          poi = 0;
-          zumodrift = 0;
-          delay(1500);
-        }
+      case 3: { //stopper på hus 1 og 2
+       followline();
+     if (poi == 4 && d == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        d++;
+     }
+      if (poi == 5 && e == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        e++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
         break;
       }
+      case 5: { //stopper på hus 1 og 3
+       followline();
+     if (poi == 4 && f == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        f++;
+      }
+      if (poi == 6 && g == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        g++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;
+      }
+      case 6: { //stopper på hus 2 og 3
+       followline();
+     if (poi == 5 && h == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        h++;
+      }
+      if (poi == 6 && j == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        j++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;
+      }
+      
+      case 7: { //stopper på hus 1, 2 og 3
+       followline();
+     if (poi == 4 && k == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        k++;
+      }
+      if (poi == 5 && l == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        l++;
+      }
+      if (poi == 6 && m == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        m++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;      
+      }
   }
-
 }
+
+
 
   
