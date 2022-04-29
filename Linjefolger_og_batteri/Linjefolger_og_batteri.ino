@@ -41,9 +41,20 @@ void loop(){
   if (Serial1.available()){
     SHouse = Serial1.readString();
     Serial1.setTimeout(30);
-    zumodrift = SHouse.toInt(); // får et nummer mellom 0 og 15
+    if (SHouse.toInt()>10) {
+      kapasitet = SHouse.toInt();
+    }
+    else {
+      zumodrift = SHouse.toInt(); // får et nummer mellom 0 og 15
+    }
+    
+    
   }
-  
+  if (poi == 2 && kapasitet < 500) {
+    motors.setSpeeds(0,0);
+    Charge();
+    Serial1.println(kapasitet);
+  }
 
   switch(zumodrift) {
     case 0: {

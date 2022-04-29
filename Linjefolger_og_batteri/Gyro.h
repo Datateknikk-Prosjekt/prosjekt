@@ -62,6 +62,7 @@ void gethouse() {
   if (Serial1.available() > 0) {
     SHouse = Serial1.readString();
     Serial1.setTimeout(30);
+    if (SHouse.toInt()>1000)
     zumodrift = SHouse.toInt(); // får et nummer mellom 0 og 15
     /*if (IHouse == 1){
       zumodrift = 1;

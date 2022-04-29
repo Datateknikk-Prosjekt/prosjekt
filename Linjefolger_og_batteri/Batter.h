@@ -45,6 +45,7 @@ void Charge(){ //lade funksjon
     kvalitet_read = kvalitet_read - 2; //Oppdaterer kvaliteten på batteriet
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = kapasitet + 400; //setter opp hvor mye strøm som er i batteritet 
+    buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
     if (kapasitet > (12*kvalitet_read)) { //passer på at det ikke blir mer strøm enn det som er mulig 
       kapasitet = 12*kvalitet_read;
     }
@@ -54,6 +55,7 @@ void Charge(){ //lade funksjon
     kvalitet_read = kvalitet_read - 3;
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = kapasitet + 800;
+    buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
     if (kapasitet > (12*kvalitet_read)) {
       kapasitet = 12*kvalitet_read;
     }
@@ -63,6 +65,7 @@ void Charge(){ //lade funksjon
     kvalitet_read = kvalitet_read - 5;
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = 12 * kvalitet_read;
+    buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
   }
 }
 
