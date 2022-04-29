@@ -32,10 +32,10 @@ void loop() {
     reconnect();
   }
   client.loop(); //gjør at søket etter innkommende signal kjører hele tiden
+
   
   sendData();  //sender data til node red og zumo
-  Funkgjennomsnittsfart ();
-  Powerdrain();
+  
   
   
   
