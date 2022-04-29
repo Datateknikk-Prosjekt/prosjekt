@@ -13,14 +13,13 @@ void Funkgjennomsnittsfart () {                   //funksjon for utregning av gj
     
     
   }
-  if ((millis() - secundmillis2) > 3000) {     //kjekker om det har gått 1 min
+  if ((millis() - secundmillis2) > 60000) {     //kjekker om det har gått 1 min
     gjennomsnittsfart = gjennomsnittsfart/gjennomsnitthelp; //regner ut gjennomsnittsfarten 
     AvgS = gjennomsnittsfart;                     //Setter variabelen som blir sendt til nod red lik gjennomsnittsfarten
     secundmillis2 = millis();                 //reseter millis sånn at timeren fungerer
     maxS = maxH;                               //Setter variabelen som blir sendt til nod red lik makshastigheten
     gjennomsnitthelp = 0;                         //reseter variablene
     maxH = 0;
-    Serial2.println(balance + 600);
     gjennomsnittsfart = 0;
   }
 }
@@ -29,7 +28,9 @@ void Funkgjennomsnittsfart () {                   //funksjon for utregning av gj
 
 //funksjon for utregnijng av batteri
 void Powerdrain(){
-
+  //if (dataS < 0) { //passer på at det blir gitt en positiv verdi
+    //dataS = 0 - speedV;
+  //}
   Hastig_V++; //holder telling på hvor mange ganger en fart har blitt lagt til
   Hastighet = Hastighet + dataS + 1; //legger til hastigheten 
   if (currentmillis - secundmillis > 1000) { //skjekker om det har gått 1 sekund
@@ -38,8 +39,7 @@ void Powerdrain(){
     kapasitet = kapasitet - Poweruse;//trekker brukt energi fra orginal energi
     if ((kapasitet < 300) && (Bstatus == 0)) {
       Bstatus = 1;
-      Serial2.println(kapasitet + 100);
-      
+      Serial2.println(kapasitet);
     }
     batS = kapasitet;
     secundmillis = currentmillis; //fikser secundmillis
@@ -51,29 +51,45 @@ void Powerdrain(){
 
 
 
-void sendData(){
 
+
+
+void sendData(){
+  /*if (WiFi.status() != WL_CONNECTED){ //hvis man mister tilkobling til nett
+    connect_WIFI();
+  }
+  
+  connect_MQTT(); //connecter til mqtt
+  Serial.setTimeout(2000); */
   
   float g = random(20,50);
   
 
-if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
+
+  if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     dataR = Serial2.readString();
-    Serial2.setTimeout(30); //bryter lesing så vi kan sende og motta fortere
+    Serial2.setTimeout(50); //bryter lesing så vi kan sende og motta fortere
     dataS = dataR.toInt(); //gjør om fra int til string
-    if (1301 > dataS && dataS > 100) {
-      kapasitet = dataS - 100;
-      dataS = 0;
-      Bstatus = 0;
-    }
-    else if (dataS > 1400) {
-      balance = dataS - 1400;
-      dataS = 0;
-      Bstatus = 0;
-    }
   }
     
+  
+  
+  /*Serial.print("Speed: ");
+  Serial.print(dataS);
+  Serial.println(" km/t");
 
+  Serial.print("Average Speed: ");
+  Serial.print(AvgS);
+  Serial.println(" km/t");
+
+  Serial.print("Max Speed: ");
+  Serial.print(maxS);
+  Serial.println(" km/t");
+  
+  Serial.print("Battery: ");
+  Serial.print(batS);
+  Serial.println(" %");
+*/
 
   Funkgjennomsnittsfart ();
   Powerdrain();
@@ -125,6 +141,19 @@ if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
     client.publish(current_speed_topic, String(dataS).c_str());
   }
+  
+  // Sender til mqtt broker med topic balance
+  if (client.publish(balance_topic, String(balance).c_str())) {//sender til mqtt med topic og variabel 
+    Serial.println("Current speed ble sendt!");
+  }
+  
+  //Hvis det ikke blir sendt prøves det på nytt
+  else {
+    Serial.println("Current speed ble ikke sendt");
+    client.connect(clientID, mqtt_username, mqtt_password);
+    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+    client.publish(balance_topic, String(balance).c_str());
+  }
   delay(sendS);       // printer ny verdi hvert .... millisekund
 }
 
@@ -149,12 +178,15 @@ void callback(char* topic, byte* message, unsigned int length) {
 
     if (messageTemp == "2"){  //dette bestemmer hvilke hus som trenger søppeltømming. 
       caseV = caseV +1;
+      balance= balance+ 50;
     }
     else if (messageTemp == "4"){
       caseV = caseV+2;
+      balance= balance+ 50;
       }
     else if (messageTemp == "6"){
       caseV = caseV+4;
+      balance= balance+ 50;
       }
     else if (messageTemp == "5"){
       caseV = caseV-4;
@@ -173,5 +205,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     
    
     }
-#endif
   
+
+
+#endif
