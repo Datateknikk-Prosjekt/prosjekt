@@ -28,9 +28,7 @@ void Funkgjennomsnittsfart () {                   //funksjon for utregning av gj
 
 //funksjon for utregnijng av batteri
 void Powerdrain(){
-  //if (dataS < 0) { //passer på at det blir gitt en positiv verdi
-    //dataS = 0 - speedV;
-  //}
+
   Hastig_V++; //holder telling på hvor mange ganger en fart har blitt lagt til
   Hastighet = Hastighet + dataS + 1; //legger til hastigheten 
   if (currentmillis - secundmillis > 1000) { //skjekker om det har gått 1 sekund
@@ -56,12 +54,7 @@ void Powerdrain(){
 
 
 void sendData(){
-  /*if (WiFi.status() != WL_CONNECTED){ //hvis man mister tilkobling til nett
-    connect_WIFI();
-  }
-  
-  connect_MQTT(); //connecter til mqtt
-  Serial.setTimeout(2000); */
+
   
   float g = random(20,50);
   
@@ -81,24 +74,7 @@ if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     }
   }
     
-  
-  
-  /*Serial.print("Speed: ");
-  Serial.print(dataS);
-  Serial.println(" km/t");
 
-  Serial.print("Average Speed: ");
-  Serial.print(AvgS);
-  Serial.println(" km/t");
-
-  Serial.print("Max Speed: ");
-  Serial.print(maxS);
-  Serial.println(" km/t");
-  
-  Serial.print("Battery: ");
-  Serial.print(batS);
-  Serial.println(" %");
-*/
 
   Funkgjennomsnittsfart ();
   Powerdrain();
