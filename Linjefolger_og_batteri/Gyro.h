@@ -21,9 +21,13 @@ int gyro_r; //definerer en variabel
 void Battery_reset() { //void funksjon som leser av akselerometeret 
   gyro.read(); //leser akselereometeret 
   gyro_r = gyro.g.y;
-  if (gyro_r > 800) { //oppdager at den blir snudd 
+  if (gyro_r > 800 && balance >= 200) { //oppdager at den blir snudd 
     EEPROM.update(0, 100); //oppdaterer batteriets kvaitet. Kanskje legge til en buzzer lys for å si at den er klar med en vent på button press. Kanskje sette batteri verdien tilbake til 1200.
-    
+    low_power();
+    zumodrift = 8;
+    kapasitet = 1200;
+    Serial1.println(balance + 1200);
+    Serial1.println(kapasitet + 100);
     buttonA.waitForButton();
   }
 }
@@ -56,9 +60,21 @@ void gethouse() {
 */
 void gethouse() {
   poi = 0;
-  a = 0;
-  b = 0;
-  c = 0;
+   a = 0;
+   b = 0;
+   c = 0;
+   d = 0;
+   e = 0;
+   f = 0;
+   g = 0;
+   h = 0;
+   j = 0;
+   k = 0;
+   l = 0;
+   m = 0;
+
+}
+/*
   if (Serial1.available() > 0) {
     SHouse = Serial1.readString();
     Serial1.setTimeout(30);
@@ -82,7 +98,7 @@ void gethouse() {
     if (IHouse == 6){
       zumodrift = 6;
     }*/
-  }
-}
+  
+
 
 #endif

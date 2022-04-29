@@ -6,6 +6,7 @@
 
 int etmillis = 0;
 
+unsigned long SecundMillis;
 
 void setup()
 {
@@ -36,34 +37,41 @@ void setup()
 
 
 void loop(){
+if (kapasitet < 400 && millis() - SecundMillis > 4000) {
+    SecundMillis = millis();
+    very_low_power();
+  }
  
   speedometer();
   if (Serial1.available()){
     SHouse = Serial1.readString();
     Serial1.setTimeout(30);
-    if (SHouse.toInt()>10) {
-      kapasitet = SHouse.toInt();
+    if (SHouse.toInt()>10 && SHouse.toInt() < 1300) {
+      kapasitet = SHouse.toInt() - 100;
+    }
+    else if (SHouse.toInt() > 1400) {
+      balance = SHouse.toInt() - 1400;
     }
     else {
       zumodrift = SHouse.toInt(); // får et nummer mellom 0 og 15
     }
-    
-    
+
+
   }
-  if (poi == 2 && kapasitet < 500) {
+  if (poi == 5 && kapasitet < 500) {
     motors.setSpeeds(0,0);
     Charge();
-    Serial1.println(kapasitet);
+    Battery_reset();
   }
-
   switch(zumodrift) {
     case 0: {
       motors.setSpeeds(0,0);
+      gethouse();
       break;
       }
     case 1: { //case 1 stopper på hus 1
     followline(); 
-    if (poi == 4 && a == 0){
+    if (poi == 2 && a == 0){
       motors.setSpeeds(0,0);
       a++;
       delay(1500);
@@ -77,7 +85,7 @@ void loop(){
     }
     case 2: { //stopper på hus 2
       followline();
-      if (poi == 5 && b == 0) {
+      if (poi == 3 && b == 0) {
         motors.setSpeeds(0,0);
         b++;
         delay(1500);
@@ -90,7 +98,7 @@ void loop(){
     }
     case 4: { //stopper på hus 3
      followline();
-      if (poi == 6 && c == 0) {
+      if (poi == 4 && c == 0) {
         motors.setSpeeds(0,0);
         c++;
         delay(1500);
@@ -103,12 +111,12 @@ void loop(){
       }
       case 3: { //stopper på hus 1 og 2
        followline();
-     if (poi == 4 && d == 0) {
+     if (poi == 2 && d == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         d++;
      }
-      if (poi == 5 && e == 0) {
+      if (poi == 3 && e == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         e++;
@@ -121,12 +129,12 @@ void loop(){
       }
       case 5: { //stopper på hus 1 og 3
        followline();
-     if (poi == 4 && f == 0) {
+     if (poi == 2 && f == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         f++;
       }
-      if (poi == 6 && g == 0) {
+      if (poi == 4 && g == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         g++;
@@ -139,12 +147,12 @@ void loop(){
       }
       case 6: { //stopper på hus 2 og 3
        followline();
-     if (poi == 5 && h == 0) {
+     if (poi == 3 && h == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         h++;
       }
-      if (poi == 6 && j == 0) {
+      if (poi == 4 && j == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         j++;
@@ -158,17 +166,17 @@ void loop(){
       
       case 7: { //stopper på hus 1, 2 og 3
        followline();
-     if (poi == 4 && k == 0) {
+     if (poi == 2 && k == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         k++;
       }
-      if (poi == 5 && l == 0) {
+      if (poi == 3 && l == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         l++;
       }
-      if (poi == 6 && m == 0) {
+      if (poi == 4 && m == 0) {
         motors.setSpeeds(0,0);
         delay(1500);
         m++;
@@ -179,7 +187,15 @@ void loop(){
       }
         break;      
       }
-  }
+      case 8: {
+        followline();
+        if (poi == 7) {
+          motors.setSpeeds(0,0);
+          zumodrift = 0;
+        }
+        break;
+      }
+    }
 }
 
 

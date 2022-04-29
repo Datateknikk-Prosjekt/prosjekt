@@ -66,7 +66,7 @@ void noLine(){
     while (millis()-beforeMillis <= 10000) { //har forandret seg mer en 500 på 25ms.
       int16_t nolinevalue = lineSensors.readLine(lineSensorValues); //når linjesensoren mister linja får denne en verdi på 4000.
       if (nolinevalue != 4000)break; //vist linjesensoren får en ny verdi bryter den while løkka.
-      else if (millis()-beforeMillis > 1500 && millis()-beforeMillis < 2700) {
+      else if (millis()-beforeMillis > 1500 && millis()-beforeMillis < 2000) {
         for (int i = 0; i<230; i++){
         motors.setSpeeds(i, -i);
         count = 1;

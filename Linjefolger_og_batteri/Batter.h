@@ -18,6 +18,7 @@ int buzz_light = 1;
 float maxH = 0;
 float gjennomsnittsfart;
 int gjennomsnitthelp;
+int balance;
 
 
 //Funksjoner batteri:
@@ -39,36 +40,43 @@ void Powerdrain(){
 }
 
 void Charge(){ //lade funksjon
-  
-  if (buttonA.isPressed()) { //skjekker om button A er presset 
+  if (buttonA.isPressed() && balance >= 25) { //skjekker om button A er presset 
     delay(15000);
     kvalitet_read = kvalitet_read - 2; //Oppdaterer kvaliteten på batteriet
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = kapasitet + 400; //setter opp hvor mye strøm som er i batteritet 
-    buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
+    Serial1.println(balance - 25);
     if (kapasitet > (12*kvalitet_read)) { //passer på at det ikke blir mer strøm enn det som er mulig 
       kapasitet = 12*kvalitet_read;
     }
+    zumodrift = 8;
+    Serial1.println(kapasitet + 100);
+    Serial1.println(balance + 1400);
   }
-  else if (buttonB.isPressed()) {
+  else if (buttonB.isPressed() && balance >= 50) {
     delay(20000);
     kvalitet_read = kvalitet_read - 3;
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = kapasitet + 800;
-    buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
+    Serial1.println(balance - 50);
     if (kapasitet > (12*kvalitet_read)) {
       kapasitet = 12*kvalitet_read;
     }
+    zumodrift = 8;
+    Serial1.println(kapasitet + 100);
+    Serial1.println(balance + 1400);
   }
-  else if (buttonC.isPressed()) {
+  else if (buttonC.isPressed() && balance >= 75) {
     delay(25000);
     kvalitet_read = kvalitet_read - 5;
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = 12 * kvalitet_read;
-    buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
+    Serial1.println(balance - 75);
+    zumodrift = 8;
+    Serial1.println(kapasitet + 100);
+    Serial1.println(balance + 1400);
   }
 }
-
 
 
 void low_power() { //under 10 varsela
@@ -124,7 +132,5 @@ void Funkgjennomsnittsfart () {
     gjennomsnittsfart = 0;
   }
 }
-
-
 
 #endif
