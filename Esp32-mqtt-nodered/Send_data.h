@@ -167,6 +167,13 @@ void callback(char* topic, byte* message, unsigned int length) {
       caseV = caseV - 1;
       }      
     }
+  else if (String(topic) == "RC"){
+   
+    if (messageTemp == "true"){
+      caseV = 9;
+    }
+    else if (messageTemp == "false"){
+      caseV = 0;
     
     Serial.print("Husene som trenger søppeltømming er: ");
     
