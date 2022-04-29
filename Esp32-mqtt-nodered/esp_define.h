@@ -14,10 +14,11 @@ float kapasitet = 1200;
 //variabler for utregninger for fart og batteri
 unsigned long currentmillis;
 unsigned long secundmillis;
+unsigned long secundmillis2;
 float Hastig_V;
 float Hastighet;
 float Poweruse;
-
+int Bstatus; //passer på at batteri statusen blir bare sendt en gang
 
 
 //Variabler for motta data fra zumo og sende til node red
@@ -35,12 +36,12 @@ unsigned long twoMillis;
 
 
 // WiFi
-const char* ssid = "AndroidAP";                 // SSID
-const char* wifi_password = "hei45678"; // Nettverkspassord
+const char* ssid = "Njord Wifi";                 // SSID
+const char* wifi_password = "eqaz3123"; // Nettverkspassord
 
 
 // MQTT
-const char* mqtt_server = "192.168.186.184";  // IP adresse
+const char* mqtt_server = "192.168.10.179";  // IP adresse
 const char* mqtt_username = "MangoPie"; // MQTT username
 const char* mqtt_password = "MangoPie"; // MQTT password
 const char* clientID = "Zumo/Esp"; // Esp navn
