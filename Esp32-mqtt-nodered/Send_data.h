@@ -9,14 +9,15 @@ void Funkgjennomsnittsfart () {                   //funksjon for utregning av gj
   gjennomsnittsfart = gjennomsnittsfart + dataS;  //Legger sammen alle verdiene fra fartsmåleren
   gjennomsnitthelp++;                             //sumerer opp antall ganger farten har blitt lagt til.
   if (dataS > maxH) {                             //kjekker om farten lest er større en den største målt
-    maxH = dataS;                                 //setter den nye dataen til den største
+    maxH = dataS; //setter den nye dataen til den største
+    
     
   }
-  if (currentmillis - secundmillis > 60000) {     //kjekker om det har gått 1 min
+  if ((millis() - secundmillis2) > 60000) {     //kjekker om det har gått 1 min
     gjennomsnittsfart = gjennomsnittsfart/gjennomsnitthelp; //regner ut gjennomsnittsfarten 
     AvgS = gjennomsnittsfart;                     //Setter variabelen som blir sendt til nod red lik gjennomsnittsfarten
-    secundmillis = currentmillis;                 //reseter millis sånn at timeren fungerer
-    maxS = maxH;                                  //Setter variabelen som blir sendt til nod red lik makshastigheten
+    secundmillis2 = millis();                 //reseter millis sånn at timeren fungerer
+    maxS = maxH;                               //Setter variabelen som blir sendt til nod red lik makshastigheten
     gjennomsnitthelp = 0;                         //reseter variablene
     maxH = 0;
     gjennomsnittsfart = 0;
@@ -34,8 +35,13 @@ void Powerdrain(){
   Hastighet = Hastighet + dataS + 1; //legger til hastigheten 
   if (currentmillis - secundmillis > 1000) { //skjekker om det har gått 1 sekund
     Hastighet = Hastighet/Hastig_V; //regner ut gjennomsnitts hastigheten på det sekundet 
-    Poweruse = 10 + 2 * Hastighet; //omregner det til energibruk
-    kapasitet = kapasitet - Poweruse; //trekker brukt energi fra orginal energi
+    Poweruse = Hastighet/2; //omregner det til energibruk
+    kapasitet = kapasitet - Poweruse;//trekker brukt energi fra orginal energi
+    if ((kapasitet < 300) && (Bstatus == 0)) {
+      Bstatus = 1;
+      Serial2.println(kapasitet);
+    }
+    batS = kapasitet;
     secundmillis = currentmillis; //fikser secundmillis
     Hastighet = 0; //reseter hastighets variabelen
     Hastig_V = 0; //reseter variabel
@@ -57,11 +63,12 @@ void sendData(){
   Serial.setTimeout(2000); */
   
   float g = random(20,50);
+  
 
 
   if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     dataR = Serial2.readString();
-    Serial2.setTimeout(30); //bryter lesing så vi kan sende og motta fortere
+    Serial2.setTimeout(50); //bryter lesing så vi kan sende og motta fortere
     dataS = dataR.toInt(); //gjør om fra int til string
   }
     
@@ -83,6 +90,9 @@ void sendData(){
   Serial.print(batS);
   Serial.println(" %");
 */
+
+  Funkgjennomsnittsfart ();
+  Powerdrain();
   // MQTT kan bare sende strings
    // Sender til mqtt broker med topic max speed
   if (client.publish(max_speed_topic, String(maxS).c_str())) { //sender til mqtt med topic og variabel 
@@ -96,7 +106,7 @@ void sendData(){
     client.publish(max_speed_topic, String(maxS).c_str());
   }
   // Sender til mqtt broker med topic batteri
-  if (client.publish(battery_status_topic, String(g).c_str())) {//sender til mqtt med topic og variabel 
+  if (client.publish(battery_status_topic, String(batS).c_str())) {//sender til mqtt med topic og variabel 
     Serial.println("Batteri status sendt!"); //bekrefter at det er sendt
   }
   //Hvis det ikke blir sendt prøves det på nytt
@@ -104,7 +114,7 @@ void sendData(){
     Serial.println("Batteri status ble ikke sendt.");
     client.connect(clientID, mqtt_username, mqtt_password);
     delay(10); 
-    client.publish(battery_status_topic, String(g).c_str());
+    client.publish(battery_status_topic, String(batS).c_str());
   }
 
    // Sender til mqtt broker med topic average speed
