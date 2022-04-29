@@ -125,6 +125,19 @@ if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
     client.publish(current_speed_topic, String(dataS).c_str());
   }
+  
+  // Sender til mqtt broker med topic balance
+  if (client.publish(balance_topic, String(balance).c_str())) {//sender til mqtt med topic og variabel 
+    Serial.println("Balance ble sendt!");
+  }
+  
+  //Hvis det ikke blir sendt prøves det på nytt
+  else {
+    Serial.println("Balance ble ikke sendt");
+    client.connect(clientID, mqtt_username, mqtt_password);
+    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+    client.publish(balance_topic, String(balance).c_str());
+  }
   delay(sendS);       // printer ny verdi hvert .... millisekund
 }
 
@@ -149,12 +162,15 @@ void callback(char* topic, byte* message, unsigned int length) {
 
     if (messageTemp == "2"){  //dette bestemmer hvilke hus som trenger søppeltømming. 
       caseV = caseV +1;
+      balance= balance+ 50;
     }
     else if (messageTemp == "4"){
       caseV = caseV+2;
+      balance= balance+ 50;
       }
     else if (messageTemp == "6"){
       caseV = caseV+4;
+      balance= balance+ 50;
       }
     else if (messageTemp == "5"){
       caseV = caseV-4;
