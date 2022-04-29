@@ -200,7 +200,7 @@ void speedometer(){
     speedV = dt/(0.1);
     lastDisplayTime = millis();
     float Speedprint = constrain(speedV, 0, 30);
-    Serial1.println(poi);
+    Serial1.println(Speedprint);
   }
 }
 
