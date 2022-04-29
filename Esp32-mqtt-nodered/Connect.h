@@ -19,6 +19,7 @@ void reconnect() {
       Serial.println("connected");
       // Subscribe til topic 
       client.subscribe("Hus");
+      client.subscribe("RC");
     } else {
       Serial.print("failed");
       // Venter 5 sek før den prøver igjen
@@ -37,6 +38,7 @@ void connect_MQTT(){
   if (client.connect(clientID, mqtt_username, mqtt_password)) {
     Serial.println("Connected to MQTT Broker!");
     client.subscribe("Hus"); //subscriber på topic
+    client.subscribe("RC");
 
   }
   else {
