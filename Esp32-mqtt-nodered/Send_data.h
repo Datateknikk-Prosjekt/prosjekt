@@ -39,7 +39,8 @@ void Powerdrain(){
     kapasitet = kapasitet - Poweruse;//trekker brukt energi fra orginal energi
     if ((kapasitet < 300) && (Bstatus == 0)) {
       Bstatus = 1;
-      Serial2.println(kapasitet);
+      Serial2.println(kapasitet + 100);
+      Serial2.println(balance + 1400);
     }
     batS = kapasitet;
     secundmillis = currentmillis; //fikser secundmillis
@@ -65,11 +66,19 @@ void sendData(){
   float g = random(20,50);
   
 
-
-  if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
+if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     dataR = Serial2.readString();
-    Serial2.setTimeout(50); //bryter lesing så vi kan sende og motta fortere
+    Serial2.setTimeout(30); //bryter lesing så vi kan sende og motta fortere
     dataS = dataR.toInt(); //gjør om fra int til string
+    if (1301 > dataS && dataS > 100) {
+      kapasitet = dataS - 100;
+      dataS = 0;
+      Bstatus = 1;
+    }
+    else if (dataS > 1400) {
+      balance = dataS - 1400;
+      dataS = 0;
+    }
   }
     
   
@@ -190,6 +199,3 @@ void callback(char* topic, byte* message, unsigned int length) {
    
     }
   
-
-
-#endif
