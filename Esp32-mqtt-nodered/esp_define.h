@@ -9,7 +9,8 @@ float gjennomsnittsfart;
 int gjennomsnitthelp;
 float speedV;
 float maxH;
-float kapasitet = 1200;
+float kapasitet = 630;
+int balance = 1000;
 
 //variabler for utregninger for fart og batteri
 unsigned long currentmillis;

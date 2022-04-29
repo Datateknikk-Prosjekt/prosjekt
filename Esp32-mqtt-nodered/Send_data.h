@@ -13,13 +13,14 @@ void Funkgjennomsnittsfart () {                   //funksjon for utregning av gj
     
     
   }
-  if ((millis() - secundmillis2) > 60000) {     //kjekker om det har gått 1 min
+  if ((millis() - secundmillis2) > 3000) {     //kjekker om det har gått 1 min
     gjennomsnittsfart = gjennomsnittsfart/gjennomsnitthelp; //regner ut gjennomsnittsfarten 
     AvgS = gjennomsnittsfart;                     //Setter variabelen som blir sendt til nod red lik gjennomsnittsfarten
     secundmillis2 = millis();                 //reseter millis sånn at timeren fungerer
     maxS = maxH;                               //Setter variabelen som blir sendt til nod red lik makshastigheten
     gjennomsnitthelp = 0;                         //reseter variablene
     maxH = 0;
+    Serial2.println(balance + 600);
     gjennomsnittsfart = 0;
   }
 }
@@ -38,7 +39,7 @@ void Powerdrain(){
     if ((kapasitet < 300) && (Bstatus == 0)) {
       Bstatus = 1;
       Serial2.println(kapasitet + 100);
-      Serial2.println(balance + 1400);
+      
     }
     batS = kapasitet;
     secundmillis = currentmillis; //fikser secundmillis
@@ -46,9 +47,6 @@ void Powerdrain(){
     Hastig_V = 0; //reseter variabel
   }
 }
-
-
-
 
 
 
@@ -66,11 +64,12 @@ if (Serial2.available() > 0) { //ser om det blir sendt noe fra bil til esp
     if (1301 > dataS && dataS > 100) {
       kapasitet = dataS - 100;
       dataS = 0;
-      Bstatus = 1;
+      Bstatus = 0;
     }
     else if (dataS > 1400) {
       balance = dataS - 1400;
       dataS = 0;
+      Bstatus = 0;
     }
   }
     
@@ -167,13 +166,6 @@ void callback(char* topic, byte* message, unsigned int length) {
       caseV = caseV - 1;
       }      
     }
-  else if (String(topic) == "RC"){
-   
-    if (messageTemp == "true"){
-      caseV = 9;
-    }
-    else if (messageTemp == "false"){
-      caseV = 0;
     
     Serial.print("Husene som trenger søppeltømming er: ");
     
@@ -181,4 +173,5 @@ void callback(char* topic, byte* message, unsigned int length) {
     
    
     }
+#endif
   
