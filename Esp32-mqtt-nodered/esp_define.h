@@ -4,15 +4,13 @@
 #include "PubSubClient.h" // Koble til MQTT broker
 #include "WiFi.h" // Koble til WiFi esp
 
-//variabler for utregninger for fart og batteri
+//variabler for utregninger for fart og batteri og penger
 float gjennomsnittsfart;
 int gjennomsnitthelp;
 float speedV;
 float maxH;
 float kapasitet = 630;
 int balance = 1000;
-
-//variabler for utregninger for fart og batteri
 unsigned long currentmillis;
 unsigned long secundmillis;
 unsigned long secundmillis2;
@@ -51,7 +49,7 @@ const char* current_speed_topic = "Current Speed";
 const char* battery_status_topic = "Battery Status";
 const char* average_speed_topic = "Avg. Speed";
 const char* max_speed_topic = "Max speed";
-
+const char* balance_topic = "Balance";
 
 
 // Starter wifi og mqtt
