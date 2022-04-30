@@ -1,0 +1,584 @@
+[
+    {
+        "id": "85ae573511169381",
+        "type": "tab",
+        "label": "Mqtt Sub",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b0bf3bfa596b16ad",
+        "type": "mqtt-broker",
+        "name": "Local",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ce803af5c581d0e4",
+        "type": "ui_tab",
+        "name": "Zumo",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "cb7371596fbdb379",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Zumo data",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "fef2d670bbc3ba47",
+        "type": "ui_group",
+        "name": "Status",
+        "tab": "ce803af5c581d0e4",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "2fb9c2f2ca83d2eb",
+        "type": "ui_group",
+        "name": "Hus",
+        "tab": "ce803af5c581d0e4",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "bbd6afdf9c99eb39",
+        "type": "ui_group",
+        "name": "RC",
+        "tab": "ce803af5c581d0e4",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "b341bce023ba46d2",
+        "type": "ui_group",
+        "name": "Speed",
+        "tab": "ce803af5c581d0e4",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "6c0e5dbfcb7d2c97",
+        "type": "mqtt in",
+        "z": "85ae573511169381",
+        "name": "Current Speed",
+        "topic": "Current Speed",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b0bf3bfa596b16ad",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "c431e5b47f18702d",
+                "68121de8b074c97d"
+            ]
+        ]
+    },
+    {
+        "id": "c431e5b47f18702d",
+        "type": "ui_gauge",
+        "z": "85ae573511169381",
+        "name": "Current",
+        "group": "b341bce023ba46d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Current",
+        "label": "Km/t",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 300,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "68121de8b074c97d",
+        "type": "debug",
+        "z": "85ae573511169381",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1f5463668934a5d6",
+        "type": "mqtt in",
+        "z": "85ae573511169381",
+        "name": "Battery Status",
+        "topic": "Battery Status",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b0bf3bfa596b16ad",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "670137304a272d83"
+            ]
+        ]
+    },
+    {
+        "id": "670137304a272d83",
+        "type": "ui_text",
+        "z": "85ae573511169381",
+        "group": "fef2d670bbc3ba47",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Batteri",
+        "format": "{{msg.payload}} ",
+        "layout": "row-spread",
+        "x": 310,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e6e6b681a75cc0ef",
+        "type": "mqtt in",
+        "z": "85ae573511169381",
+        "name": "",
+        "topic": "Max speed",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b0bf3bfa596b16ad",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 340,
+        "wires": [
+            [
+                "ed22d2e046d91430"
+            ]
+        ]
+    },
+    {
+        "id": "4230ad2524b87038",
+        "type": "mqtt in",
+        "z": "85ae573511169381",
+        "name": "",
+        "topic": "Avg. Speed",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b0bf3bfa596b16ad",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "10daeedf05421129"
+            ]
+        ]
+    },
+    {
+        "id": "ed22d2e046d91430",
+        "type": "ui_gauge",
+        "z": "85ae573511169381",
+        "name": "Max",
+        "group": "b341bce023ba46d2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Max",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#b31200",
+            "#e6e600",
+            "#3acb43"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 310,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "10daeedf05421129",
+        "type": "ui_gauge",
+        "z": "85ae573511169381",
+        "name": "Average",
+        "group": "b341bce023ba46d2",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Average",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#b30012",
+            "#e6e600",
+            "#3acb57"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 340,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "5ed8c33c8260b8ef",
+        "type": "mqtt out",
+        "z": "85ae573511169381",
+        "name": "Hus",
+        "topic": "Hus",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b0bf3bfa596b16ad",
+        "x": 350,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "25881b43b209105f",
+        "type": "ui_switch",
+        "z": "85ae573511169381",
+        "name": "",
+        "label": "1",
+        "tooltip": "",
+        "group": "2fb9c2f2ca83d2eb",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "2",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "1",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 110,
+        "y": 500,
+        "wires": [
+            [
+                "5ed8c33c8260b8ef"
+            ]
+        ]
+    },
+    {
+        "id": "b8aa1d78abcd1990",
+        "type": "ui_switch",
+        "z": "85ae573511169381",
+        "name": "",
+        "label": "2",
+        "tooltip": "",
+        "group": "2fb9c2f2ca83d2eb",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "4",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "3",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 110,
+        "y": 560,
+        "wires": [
+            [
+                "5ed8c33c8260b8ef"
+            ]
+        ]
+    },
+    {
+        "id": "b180ef3f6f9399c3",
+        "type": "ui_switch",
+        "z": "85ae573511169381",
+        "name": "",
+        "label": "3",
+        "tooltip": "",
+        "group": "2fb9c2f2ca83d2eb",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "6",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "5",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 110,
+        "y": 620,
+        "wires": [
+            [
+                "5ed8c33c8260b8ef"
+            ]
+        ]
+    },
+    {
+        "id": "10a5bbbcd83a798e",
+        "type": "mqtt out",
+        "z": "85ae573511169381",
+        "d": true,
+        "name": "RC",
+        "topic": "RC",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b0bf3bfa596b16ad",
+        "x": 330,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "95a3956df38e9bc4",
+        "type": "ui_switch",
+        "z": "85ae573511169381",
+        "d": true,
+        "name": "",
+        "label": "Zumo",
+        "tooltip": "",
+        "group": "bbd6afdf9c99eb39",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 110,
+        "y": 720,
+        "wires": [
+            [
+                "10a5bbbcd83a798e"
+            ]
+        ]
+    },
+    {
+        "id": "2be6a75b2271b4a7",
+        "type": "mqtt in",
+        "z": "85ae573511169381",
+        "name": "",
+        "topic": "Balance",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b0bf3bfa596b16ad",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 40,
+        "wires": [
+            [
+                "b0f3076a41ce182b"
+            ]
+        ]
+    },
+    {
+        "id": "b0f3076a41ce182b",
+        "type": "ui_text",
+        "z": "85ae573511169381",
+        "group": "fef2d670bbc3ba47",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Penger konto:",
+        "format": "{{msg.payload}} kr",
+        "layout": "row-spread",
+        "x": 320,
+        "y": 40,
+        "wires": []
+    }
+]
