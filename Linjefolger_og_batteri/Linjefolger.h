@@ -31,6 +31,7 @@ long darkspotmillis = 0;
 
 
 
+
 //Posisjonsvariabler for å assistere linjefølgeren;
 int a;
 int b;
@@ -61,9 +62,9 @@ Zumo32U4LCD lcd;
 
 
 //Funksjoner linjefølger:
-void noLine(){
+void noLine(){ //Dette er funksjonen som blir kjørt når bilen mister linja
     beforeMillis = millis();
-    while (millis()-beforeMillis <= 10000) { //har forandret seg mer en 500 på 25ms.
+    while (millis()-beforeMillis <= 10000) { .
       int16_t nolinevalue = lineSensors.readLine(lineSensorValues); //når linjesensoren mister linja får denne en verdi på 4000.
       if (nolinevalue != 4000)break; //vist linjesensoren får en ny verdi bryter den while løkka.
       else if (millis()-beforeMillis > 1500 && millis()-beforeMillis < 2000) {
@@ -72,26 +73,26 @@ void noLine(){
         count = 1;
         }
       } 
-      else if (millis()-beforeMillis > 5000){ //
+      else if (millis()-beforeMillis > 5000){ //Korreksjon vist den ikke finner linja
       motors.setSpeeds(200,100);
      }
      else {
-      motors.setSpeeds(100, 100);
-      int16_t nolineReturn = lineSensors.readLine(lineSensorValues); 
+      motors.setSpeeds(100, 100); //Setter ned motorfarten umiddelbart etter den mister linja
+      int16_t nolineReturn = lineSensors.readLine(lineSensorValues);  
       if (nolineReturn != 4000)break;
+         }
      }
-  }
   }
   
 
-bool aboveLine(uint8_t sensorIndex)
+bool aboveLine(uint8_t sensorIndex) //Funksjon som blir returnert True når bilen "ser" linja
 {
   return lineSensorValues[sensorIndex] > sensorThreshold;
 }
 
 
 
-uint16_t readSensors()
+uint16_t readSensors() //
 {
   return lineSensors.readLine(lineSensorValues);
 }
@@ -104,8 +105,8 @@ bool aboveLineDark(uint8_t sensorIndex) //funksjon som blir returnert true vist 
 }
 
 
-bool aboveDarkSpot()
-{
+bool aboveDarkSpot() //Funksjon som blir returnert true vist alle linjesensorene ser linja
+{                    // denne blir brukt til å finne poi på banen.
   motors.setSpeeds(200,200);
   return aboveLineDark(0) && aboveLineDark(1) && aboveLineDark(2) && aboveLineDark(3) && aboveLineDark(4);
 }
@@ -113,15 +114,12 @@ bool aboveDarkSpot()
 
 
 
-void followline(){
+void followline(){ //Dette er selve funkjsonen til linjefølgeren
   int16_t LFposition = lineSensors.readLine(lineSensorValues); //posisjon blir definert som avlest verdi fra linjensorene
   int16_t error = LFposition - 2000; //posisjon går fra 0-4000, error blir definert som posisjon minus 2000
   int16_t speedDifference = (error * Kp) + (Td * (error-lastError));//finner ønsket fartsforskjell på hjulene for å holde posisjon
   int16_t leftSpeed = (int16_t)maxSpeed + speedDifference;
   int16_t rightSpeed = (int16_t)maxSpeed - speedDifference;
-  //Serial.println("Last");
-  //Serial.println(lastposition);
-  //Serial.println("Posisjon");
   static const unsigned long refreshintervall = 500; //intervallet for fornyelse av variablen lastposition
   static unsigned long previousmillis = 0;
   if (millis() - previousmillis >= refreshintervall){ //if seting som blir kjørt vert 500. ms som fornyer lastposition.
@@ -129,17 +127,16 @@ void followline(){
     lastposition = LFposition;
     
   }
-  if(abs(LFposition - lastposition) > 250)
+  if(abs(LFposition - lastposition) > 250) //if setningen som ser hvist bilen mister linja
   {
     noLine();
   }
   
-  else if (aboveDarkSpot())
+  else if (aboveDarkSpot()) //Setningen som ser om bilen er over poi
     {
      
     if (millis()- darkspotmillis > 2000) {
       poi++;
-      //Serial1.print(poi);
       for (int i = 0; i <= 25; i ++){
          motors.setSpeeds(200,200);
         }
@@ -147,13 +144,13 @@ void followline(){
     }
     }
     
-  if(aboveLine(0) && aboveLine(1) && !aboveLine(4))
+  if(aboveLine(0) && aboveLine(1) && !aboveLine(4)) //Hvist bilen møter et T-kryss kjører den rett frem
     {
     motors.setSpeeds(200,200);
     delay(5);
     }
     
-  if(!aboveLine(0) && aboveLine(3) && aboveLine(4))
+  if(!aboveLine(0) && aboveLine(3) && aboveLine(4)) //Hvist bilen bilen har kjørt en blindvei skal den ta motsatt retning tilbake
     {
     unsigned long NoLineMillis = millis();
    
@@ -169,9 +166,6 @@ void followline(){
           }
           
         }
-      
-        //for (int i; i <= 3000; i++){ 
-       // motors.setSpeeds(300,-100);  
       }
       
      
@@ -189,18 +183,18 @@ void followline(){
 
 
 
-void speedometer(){
+void speedometer(){ //Funksjonen som kalkulerer hastigheten
   static uint8_t lastDisplayTime;
-  if ((uint8_t)(millis() - lastDisplayTime) >= 100)
+  if ((uint8_t)(millis() - lastDisplayTime) >= 100) //Oppdateres hvert 100ms
   {
-    int16_t countsLeft = encoders.getCountsAndResetLeft();
+    int16_t countsLeft = encoders.getCountsAndResetLeft(); //Bruker enkoderene på hvert hjul for å kalkulere hastigheten
     int16_t countsRight = encoders.getCountsAndResetRight();
-    float gCounts = (countsLeft + countsRight);
-    dt=((gCounts)/2)/75.81;
+    float gCounts = (countsLeft + countsRight); //Summerer antall "counts" fra encoderne 
+    dt=((gCounts)/2)/75.81; //Kalkulasjon for å gjør målingen til cm/s
     speedV = dt/(0.1);
     lastDisplayTime = millis();
     float Speedprint = constrain(speedV, 0, 30);
-    Serial1.println(Speedprint);
+    Serial1.println(Speedprint); //Printer farten til Serial1/ESP32
   }
 }
 
@@ -217,7 +211,7 @@ void speedometer(){
     }
     else
     {
-      motors.setSpeeds(200, -200);
+      motors.setSpeeds(200, -200); //For/if løkker som gjør at bilen roterer 180 grader i hver retning.
     }
 
     lineSensors.calibrate();
