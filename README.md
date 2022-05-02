@@ -1,4 +1,4 @@
 # prosjekt
-Her skal vi skrive koden til prosjektet. 
-Test test tes
-saoiaodiadonhaod
+Gruppe: 11
+Emne: IELET1002
+Semesteroppgave, Smart City
