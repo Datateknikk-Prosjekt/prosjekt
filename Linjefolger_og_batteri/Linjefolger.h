@@ -28,8 +28,13 @@ int count = 1; //variabel for å unngå blindvei
 int poi = 0;
 int noLineCase = 1;
 long darkspotmillis = 0;
+//Variabler for stopping ved hus
+String SHouse;
+int IHouse;
 
-
+int stopHouse1;
+int stopHouse2;
+int stopHouse3;
 
 
 //Posisjonsvariabler for å assistere linjefølgeren;
