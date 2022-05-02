@@ -61,6 +61,24 @@ Zumo32U4LCD lcd;
 
 
 
+
+void gethouse() { //Funksjon som resetter alle posisjonsvariabler når bilen har nådd "Home"
+  poi = 0;
+   a = 0;
+   b = 0;
+   c = 0;
+   d = 0;
+   e = 0;
+   f = 0;
+   g = 0;
+   h = 0;
+   j = 0;
+   k = 0;
+   l = 0;
+   m = 0;
+
+}
+
 //Funksjoner linjefølger:
 void noLine(){ //Dette er funksjonen som blir kjørt når bilen mister linja
     beforeMillis = millis();
