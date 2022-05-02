@@ -1,7 +1,7 @@
 
 
 #include "Linjefolger.h"
-#include "Batter.h"
+#include "Batter.h" //inkluderer egendefinerte biblioteker
 #include "Gyro.h"
 
 int etmillis = 0;
@@ -11,7 +11,7 @@ unsigned long SecundMillis;
 void setup()
 {
   Serial.begin(9600);
-  Serial1.begin(115200);
+  Serial1.begin(115200); //Starter Serial 1 for kommunikasjon til ESP32
   
   //setup linjefølger:
   lineSensors.initFiveSensors(); //linjesensorene
@@ -39,14 +39,14 @@ void setup()
 void loop(){
 if (kapasitet < 400 && millis() - SecundMillis > 4000) {
     SecundMillis = millis();
-    very_low_power();
+    very_low_power(); //Bil går i low_power_mode når kapasiteten går under 400
   }
  
-  speedometer();
+  speedometer(); //Speedometer blir kalt på slik at fart blir sendt via Serial1
   if (Serial1.available()){
-    SHouse = Serial1.readString();
+    SHouse = Serial1.readString(); //Zumo leser av kommando fra ESP32 
     Serial1.setTimeout(30);
-    if (SHouse.toInt()>10 && SHouse.toInt() < 1300) {
+    if (SHouse.toInt()>10 && SHouse.toInt() < 1300) { //Når avlest verdi er mellom desse parameter omhandler kommandoen kapasitet 
       kapasitet = SHouse.toInt() - 100;
     }
     else if (SHouse.toInt() > 1400) {
@@ -58,21 +58,21 @@ if (kapasitet < 400 && millis() - SecundMillis > 4000) {
 
 
   }
-  if (poi == 5 && kapasitet < 500) {
-    motors.setSpeeds(0,0);
+  if (poi == 5 && kapasitet < 500) { //poi 5 representerer ladestasjonen på vår bane. So vist bilen er på ladestasjon og kapasiteten er under 500
+    motors.setSpeeds(0,0);           // stopper bilen
     Charge();
     Battery_reset();
   }
-  switch(zumodrift) {
+  switch(zumodrift) { //Dette er en switch case der inngangsvariabelen blir styrt fra ESP32. Hver case viser til hvor på banen bilen stopper
     case 0: {
       motors.setSpeeds(0,0);
       gethouse();
       break;
       }
-    case 1: { //case 1 stopper på hus 1
-    followline(); 
-    if (poi == 2 && a == 0){
-      motors.setSpeeds(0,0);
+    case 1: { //case 1 stopper på hus 1 // followline funksjonen blir kalt på slik at bilen kjører langs linjen.
+    followline();  //vist bilen motar 1 fra ESP32 vil bilen stoppe på poi 1 og kjøre videre til stasjonen
+    if (poi == 2 && a == 0){ //a er her en hjelpevariabel som gjør slik at bilen kjører videre 
+      motors.setSpeeds(0,0); // Samme oppbygging gjelder for alle caser.
       a++;
       delay(1500);
     }
