@@ -6,6 +6,8 @@
 #include <EEPROM.h>
 #include <L3G.h>
 
+int balance;
+int Chargetime;
 int zumodrift;
 
 int refreshintervall2 = 1000;
@@ -64,150 +66,6 @@ Zumo32U4ButtonC buttonC; //aktiverer knapp C
 L3G gyro;
 Zumo32U4LCD lcd;
 
-
-
-Void SwitchCaseHouse() {
-  
-  switch(zumodrift) { //Dette er en switch case der inngangsvariabelen blir styrt fra ESP32. Hver case viser til hvor på banen bilen stopper
-    case 0: {
-      motors.setSpeeds(0,0);
-      gethouse();
-      break;
-      }
-    case 1: { //case 1 stopper på hus 1 // followline funksjonen blir kalt på slik at bilen kjører langs linjen.
-    followline();  //vist bilen motar 1 fra ESP32 vil bilen stoppe på poi 1 og kjøre videre til stasjonen
-    if (poi == 2 && a == 0){ //a er her en hjelpevariabel som gjør slik at bilen kjører videre 
-      motors.setSpeeds(0,0); // Samme oppbygging gjelder for alle caser.
-      a++;
-      delay(1500);
-    }
-    
-     if (poi == 7) {
-      motors.setSpeeds(0,0);
-      zumodrift = 0;
-     }
-    break;
-    }
-    case 2: { //stopper på hus 2
-      followline();
-      if (poi == 3 && b == 0) {
-        motors.setSpeeds(0,0);
-        b++;
-        delay(1500);
-      }
-      if (poi == 7) {
-        motors.setSpeeds(0,0);
-        zumodrift = 0; 
-      }
-      break;
-    }
-    case 4: { //stopper på hus 3
-     followline();
-      if (poi == 4 && c == 0) {
-        motors.setSpeeds(0,0);
-        c++;
-        delay(1500);
-      }
-      if (poi == 7) { 
-        motors.setSpeeds(0,0);
-        zumodrift = 0; 
-      }
-      break;
-      }
-      case 3: { //stopper på hus 1 og 2
-       followline();
-     if (poi == 2 && d == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        d++;
-     }
-      if (poi == 3 && e == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        e++;
-      }
-      if (poi == 7) {
-        motors.setSpeeds(0,0);
-        zumodrift = 0; 
-      }
-        break;
-      }
-      case 5: { //stopper på hus 1 og 3
-       followline();
-     if (poi == 2 && f == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        f++;
-      }
-      if (poi == 4 && g == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        g++;
-      }
-      if (poi == 7) {
-        motors.setSpeeds(0,0);
-        zumodrift = 0; 
-      }
-        break;
-      }
-      case 6: { //stopper på hus 2 og 3
-       followline();
-     if (poi == 3 && h == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        h++;
-      }
-      if (poi == 4 && j == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        j++;
-      }
-      if (poi == 7) {
-        motors.setSpeeds(0,0);
-        zumodrift = 0; 
-      }
-        break;
-      }
-      
-      case 7: { //stopper på hus 1, 2 og 3
-       followline();
-     if (poi == 2 && k == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        k++;
-      }
-      if (poi == 3 && l == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        l++;
-      }
-      if (poi == 4 && m == 0) {
-        motors.setSpeeds(0,0);
-        delay(1500);
-        m++;
-      }
-      if (poi == 7) {
-        motors.setSpeeds(0,0);
-        zumodrift = 0; 
-      }
-        break;      
-      }
-      case 8: {
-        followline();
-        if (poi == 7) {
-          motors.setSpeeds(0,0);
-          zumodrift = 0;
-        }
-        break;
-      }
-    }
-}
-  
-  
-}
-
-
-
 void gethouse() { //Funksjon som resetter alle posisjonsvariabler når bilen har nådd "Home"
   poi = 0;
    a = 0;
@@ -225,10 +83,16 @@ void gethouse() { //Funksjon som resetter alle posisjonsvariabler når bilen har
 
 }
 
+  
+
+
+
+
+
 //Funksjoner linjefølger:
 void noLine(){ //Dette er funksjonen som blir kjørt når bilen mister linja
     beforeMillis = millis();
-    while (millis()-beforeMillis <= 10000) { .
+    while (millis()-beforeMillis <= 10000) {
       int16_t nolinevalue = lineSensors.readLine(lineSensorValues); //når linjesensoren mister linja får denne en verdi på 4000.
       if (nolinevalue != 4000)break; //vist linjesensoren får en ny verdi bryter den while løkka.
       else if (millis()-beforeMillis > 1500 && millis()-beforeMillis < 2000) {
@@ -381,6 +245,144 @@ void speedometer(){ //Funksjonen som kalkulerer hastigheten
     lineSensors.calibrate();
   }
   motors.setSpeeds(0, 0);
+}
+
+
+void SwitchCaseHouse() {
+  
+  switch(zumodrift) { //Dette er en switch case der inngangsvariabelen blir styrt fra ESP32. Hver case viser til hvor på banen bilen stopper
+    case 0: {
+      motors.setSpeeds(0,0);
+      gethouse();
+      break;
+      }
+    case 1: { //case 1 stopper på hus 1 // followline funksjonen blir kalt på slik at bilen kjører langs linjen.
+    followline();  //vist bilen motar 1 fra ESP32 vil bilen stoppe på poi 1 og kjøre videre til stasjonen
+    if (poi == 2 && a == 0){ //a er her en hjelpevariabel som gjør slik at bilen kjører videre 
+      motors.setSpeeds(0,0); // Samme oppbygging gjelder for alle caser.
+      a++;
+      delay(1500);
+    }
+    
+     if (poi == 7) {
+      motors.setSpeeds(0,0);
+      zumodrift = 0;
+     }
+    break;
+    }
+    case 2: { //stopper på hus 2
+      followline();
+      if (poi == 3 && b == 0) {
+        motors.setSpeeds(0,0);
+        b++;
+        delay(1500);
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+      break;
+    }
+    case 4: { //stopper på hus 3
+     followline();
+      if (poi == 4 && c == 0) {
+        motors.setSpeeds(0,0);
+        c++;
+        delay(1500);
+      }
+      if (poi == 7) { 
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+      break;
+      }
+      case 3: { //stopper på hus 1 og 2
+       followline();
+     if (poi == 2 && d == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        d++;
+     }
+      if (poi == 3 && e == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        e++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;
+      }
+      case 5: { //stopper på hus 1 og 3
+       followline();
+     if (poi == 2 && f == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        f++;
+      }
+      if (poi == 4 && g == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        g++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;
+      }
+      case 6: { //stopper på hus 2 og 3
+       followline();
+     if (poi == 3 && h == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        h++;
+      }
+      if (poi == 4 && j == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        j++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;
+      }
+      
+      case 7: { //stopper på hus 1, 2 og 3
+       followline();
+     if (poi == 2 && k == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        k++;
+      }
+      if (poi == 3 && l == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        l++;
+      }
+      if (poi == 4 && m == 0) {
+        motors.setSpeeds(0,0);
+        delay(1500);
+        m++;
+      }
+      if (poi == 7) {
+        motors.setSpeeds(0,0);
+        zumodrift = 0; 
+      }
+        break;      
+      }
+      case 8: {
+        followline();
+        if (poi == 7) {
+          motors.setSpeeds(0,0);
+          zumodrift = 0;
+        }
+        break;
+      }
+    }
 }
 
 
