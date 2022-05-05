@@ -58,10 +58,16 @@ if (kapasitet < 400 && millis() - SecundMillis > 4000) {
 
 
   }
-  if (poi == 5 && kapasitet < 500) { //poi 5 representerer ladestasjonen på vår bane. So vist bilen er på ladestasjon og kapasiteten er under 500
-    motors.setSpeeds(0,0);           // stopper bilen
-    Charge();
-    Battery_reset();
+  if (poi == 5 && kapasitet < 500) {                          //Sjekker om bilen er bed ladestasjonen og om den har lite strøm om den har det vil den vente på input om hvor mye den skal lade.
+    while (Chargetime == 0) {
+      motors.setSpeeds(0,0);                                  //Skrur av motorene
+      Charge();                                               //kjører lade funksjoner
+      very_low_power();
+      Battery_reset();
+    }
+    Chargetime = 0;                                           //Reseter veriden som holder bilen i lade mode sånn at den kan lade igjen senere og sender hvor mye penger som er igjen til ESP-en
+    Serial1.println(balance);
+    poi--;
   }
   SwitchCaseHouse(); //Funksjon med switch-case på hvor på banen bilen stopper
   }
