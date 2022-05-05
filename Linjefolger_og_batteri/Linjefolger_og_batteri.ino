@@ -63,7 +63,8 @@ if (kapasitet < 400 && millis() - SecundMillis > 4000) {
     Charge();
     Battery_reset();
   }
-}
+  SwitchCaseHouse(); //Funksjon med switch-case på hvor på banen bilen stopper
+  }
 
 
 
