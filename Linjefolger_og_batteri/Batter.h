@@ -8,86 +8,62 @@
 //Globale variabler batteri:
 float kapasitet = 1200; //kapasitetens verdi
 float kvalitet_read = EEPROM.read(0);
-float Poweruse = 0; //variabel for hvor mye som energi bilen bruker
-float Hastig_V = 0; //hjelpevariabel for hastigheten
-//int speedV = 0; //variabel for hva hastigeheten er
-float Hastighet = 0;
 int currentmillis = 0;
 int secundmillis = 0;
 int buzz_light = 1;
-float maxH = 0;
-float gjennomsnittsfart;
-int gjennomsnitthelp;
-int balance;
 
 
-//Funksjoner batteri:
-void Powerdrain(){
-  currentmillis = millis();
-  if (speedV < 0) { //passer på at det blir gitt en positiv verdi
-    speedV = 0 - speedV;
-  }
-  Hastig_V++; //holder telling på hvor mange ganger en fart har blitt lagt til
-  Hastighet = Hastighet + speedV + 1; //legger til hastigheten 
-  if (currentmillis - secundmillis > 1000) { //skjekker om det har gått 1 sekund
-    Hastighet = Hastighet/Hastig_V; //regner ut gjennomsnitts hastigheten på det sekundet 
-    Poweruse = 10 + 2 * Hastighet; //omregner det til energibruk
-    kapasitet = kapasitet - Poweruse; //trekker brukt energi fra orginal energi
-    secundmillis = currentmillis; //fikser secundmillis
-    Hastighet = 0; //reseter hastighets variabelen
-    Hastig_V = 0; //reseter variabel
-  }
-}
+
 
 void Charge(){ //lade funksjon
-  if (buttonA.isPressed() && balance >= 25) { //skjekker om button A er presset 
-    delay(15000);
+  if (buttonA.isPressed() && balance >= 25) { //Sjekker om bilen har fått besje om at den skal lade så mye og om den har nok penger 
     kvalitet_read = kvalitet_read - 2; //Oppdaterer kvaliteten på batteriet
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = kapasitet + 400; //setter opp hvor mye strøm som er i batteritet 
-    Serial1.println(balance - 25);
     if (kapasitet > (12*kvalitet_read)) { //passer på at det ikke blir mer strøm enn det som er mulig 
       kapasitet = 12*kvalitet_read;
     }
-    zumodrift = 8;
-    Serial1.println(kapasitet + 100);
-    Serial1.println(balance + 1400);
+    zumodrift = 8; //Setter bilen inn i en case hvor den drar hjem
+    Chargetime = 1; //får bilen ut av while loppen som får den til å vente på lading
+    Serial1.println(kapasitet + 100); //sender den nye kapasiteten til esp-en
+    delay(5000); //tar tid å lade
+    balance= balance + 1400 - 25; //oppdater hvor mye penger som er igjen og gjør den klar for sending 
   }
-  else if (buttonB.isPressed() && balance >= 50) {
-    delay(20000);
+  else if (buttonB.isPressed() && balance >= 50) {  //Sjekker om bilen har fått besje om at den skal lade så mye og om den har nok penger 
     kvalitet_read = kvalitet_read - 3;
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = kapasitet + 800;
-    Serial1.println(balance - 50);
     if (kapasitet > (12*kvalitet_read)) {
       kapasitet = 12*kvalitet_read;
     }
-    zumodrift = 8;
-    Serial1.println(kapasitet + 100);
-    Serial1.println(balance + 1400);
+    zumodrift = 8; //Setter bilen inn i en case hvor den drar hjem
+    Chargetime = 1; //får bilen ut av while loppen som får den til å vente på lading
+    Serial1.println(kapasitet + 100); //sender den nye kapasiteten til esp-en
+    delay(5000); //tar tid å lade
+    balance= balance + 1400 - 50; //oppdater hvor mye penger som er igjen og gjør den klar for sending 
   }
-  else if (buttonC.isPressed() && balance >= 75) {
-    delay(25000);
+  else if (buttonC.isPressed() && balance >= 75) { //Sjekker om bilen har fått besje om at den skal lade så mye og om den har nok penger 
     kvalitet_read = kvalitet_read - 5;
     EEPROM.update(0, kvalitet_read); //oppdaterer verdien på kavliteten i minnet
     kapasitet = 12 * kvalitet_read;
-    Serial1.println(balance - 75);
-    zumodrift = 8;
-    Serial1.println(kapasitet + 100);
-    Serial1.println(balance + 1400);
+    zumodrift = 8; //Setter bilen inn i en case hvor den drar hjem
+    Chargetime = 1; //får bilen ut av while loppen som får den til å vente på lading
+    Serial1.println(kapasitet + 100); //sender den nye kapasiteten til esp-en
+    delay(5000); //tar tid å lade
+    balance= balance + 1400 - 75; //oppdater hvor mye penger som er igjen og gjør den klar for sending 
   }
 }
 
 
-void low_power() { //under 10 varsela
+void low_power() { //lyd funksjon som kan bli brukt for å lage lyd om bilen har lite strøm
   buzzer.playFrequency(440, 200, 15); //frekvens 440, tid 200 millis, volume 15
 
 }
 
 
-void very_low_power() {
+void very_low_power() { //mer ekstrem verson av low power som lager lyd og bytter mellom noen lys
 
-  switch (buzz_light) {
+  switch (buzz_light) { //switch case for å forandre på hvilke lys som lyser
     case 1: {
       buzzer.playFrequency(240, 200, 15); //frekvens 440, tid 200 millis, volume 15
       ledRed(1);
@@ -118,19 +94,5 @@ void very_low_power() {
   }
 }
 
-
-void Funkgjennomsnittsfart () {
-  gjennomsnittsfart = gjennomsnittsfart + speedV;
-  gjennomsnitthelp++;
-  if (speedV > maxH) {
-    maxH = speedV;
-  }
-  if (currentmillis - secundmillis > 60000) {
-    gjennomsnittsfart = gjennomsnittsfart/gjennomsnitthelp; //print maxh oh gjennomsnittsfarten her til espen
-    gjennomsnitthelp = 0;
-    maxH = 0;
-    gjennomsnittsfart = 0;
-  }
-}
 
 #endif
